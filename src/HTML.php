@@ -270,93 +270,148 @@ class HTML
         'video',
     ];
 
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     * @return $this
+     */
     public function setType(string $type): HTML
     {
         $this->type = $type;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
     }
 
+    /**
+     * @param array $attributes
+     * @return $this
+     */
     public function setAttributes(array $attributes): HTML
     {
         $this->attributes = $attributes;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getTag(): string
     {
         return $this->tag;
     }
 
+    /**
+     * @param string $tag
+     * @return $this
+     */
     public function setTag(string $tag): HTML
     {
         $this->tag = $tag;
         return $this;
     }
 
-    public function getContent()
-    {
-        return $this->content;
-    }
-
+    /**
+     * @param $content
+     * @return $this
+     */
     public function setContent($content): HTML
     {
         $this->content = $content;
         return $this;
     }
 
-    static public function __callStatic($tag, $args): HTML
+    /**
+     * @param string $tagName the HTML tag
+     * @param array $attributes a associative array of HTML attributes
+     * @return HTML
+     */
+    public static function singular(string $tagName, $attributes = []): HTML
     {
-        if (in_array($tag, self::SINGULAR_TAGS)) {
-            $attributes = $args[0] ?? [];
-            return (new HTML())->setType(self::TYPE_SINGULAR)->setTag($tag)->setAttributes($attributes);
+        if (!in_array($tagName, self::SINGULAR_TAGS)) {
+            throw new RuntimeException("$tagName tag not supported");
         }
-
-        if (in_array($tag, self::PAIRED_TAGS)) {
-            $content = $args[0] ?? '';
-            $attributes = $args[1] ?? [];
-            return (new HTML())->setType(self::TYPE_PAIRED)->setTag($tag)->setAttributes($attributes)->setContent(
-                $content
-            );
-        }
-
-        throw new RuntimeException("$tag tag not supported");
+        return (new HTML())->setType(self::TYPE_SINGULAR)->setTag($tagName)->setAttributes($attributes);
     }
 
+    /**
+     * @param string $tagName the HTML tag
+     * @param string|HTML $content the content, either child elements or text
+     * @param array $attributes a associative array of HTML attributes
+     * @return HTML
+     */
+    public static function paired(string $tagName, $content = '',$attributes = []): HTML
+    {
+        if (!in_array($tagName, self::PAIRED_TAGS)) {
+            throw new RuntimeException("$tagName tag not supported");
+        }
+        return (new HTML())->setType(self::TYPE_PAIRED)->setTag($tagName)->setAttributes($attributes)->setContent(
+            $content
+        );
+    }
+
+    /**
+     * @param $tagName
+     * @param $args
+     * @return HTML
+     */
+    static public function __callStatic($tagName, $args): HTML
+    {
+        if (in_array($tagName, self::SINGULAR_TAGS)) {
+            $attributes = $args[0] ?? [];
+            return self::singular($tagName, $attributes);
+        }
+
+        if (in_array($tagName, self::PAIRED_TAGS)) {
+            $content = $args[0] ?? '';
+            $attributes = $args[1] ?? [];
+            return self::paired($tagName, $content, $attributes);
+        }
+
+        throw new RuntimeException("$tagName tag not supported");
+    }
+
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         $html = '';
 
         $attributeString = '';
-        foreach ($this->getAttributes() as $k => $v) {
+        foreach ($this->attributes as $k => $v) {
             $v = htmlspecialchars($v);
             $attributeString .= " $k=\"$v\"";
         }
 
         if ($this->type === self::TYPE_SINGULAR) {
-            $html = '<' . $this->getTag() . $attributeString . '/>';
+            $html = '<' . $this->tag . $attributeString . '/>';
         }
 
         if ($this->type === self::TYPE_PAIRED) {
-            $openTag = '<' . $this->getTag() . $attributeString . '>';
-            $closeTag = '</' . $this->getTag() . '>';
+            $openTag = '<' . $this->tag . $attributeString . '>';
+            $closeTag = '</' . $this->tag . '>';
 
             $content = '';
-            if (is_iterable($this->getContent())) {
-                foreach ($this->getContent() as $contentItem) {
+            if (is_iterable($this->content)) {
+                foreach ($this->content as $contentItem) {
                     $content .= "$contentItem";
                 }
             } else {
-                $content .= (string)$this->getContent();
+                $content .= (string)$this->content;
             }
 
             $html = $openTag . $content . $closeTag;

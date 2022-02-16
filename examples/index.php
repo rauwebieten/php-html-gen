@@ -12,6 +12,8 @@ $ul = h::ol([$li1, $li2], ['id' => 'lijst']);
 $legend = h::legend("Legend");
 $fieldset = h::fieldset($legend . $ul );
 
-$html = (string) $fieldset;
+$hr = h::singular('hr');
+
+$html = (string) $fieldset . $hr;
 
 print $html;
