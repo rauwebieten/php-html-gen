@@ -1,10 +1,12 @@
 # HTML helper
 
+A simple PHP library for generating HTML
+
 ## Installation
 
     composer require rauwebieten/php-html-helper
 
-## Usage
+## Example
 
 ```php
 <?php
@@ -13,13 +15,8 @@ use RauweBieten\PhpHtmlGen\HTML as h;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$li1 = h::li('item 1');
-$li2 = h::li(h::a('a link', ['href' => '#uri']));
-
-$ul = h::ol([$li1, $li2], ['id' => 'lijst']);
-
 $legend = h::legend("Legend");
-$fieldset = h::fieldset($legend . $ul );
+$fieldset = h::fieldset($legend);
 
 $html = (string) $fieldset;
 
