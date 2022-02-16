@@ -1,0 +1,20 @@
+{
+    "name": "rauwebieten/php-html-helper",
+    "description": "A simple PHP for generating HTML",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rauwe Bieten",
+            "email": "rauwe.bieten@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "RauweBieten\\PhpHtmlHelper\\": "src/"
+        }
+    }
+}
