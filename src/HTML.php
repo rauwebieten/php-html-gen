@@ -1,6 +1,6 @@
 <?php
 
-namespace RauweBieten\PhpHtmlHelper;
+namespace RauweBieten\PhpHtmlGen;
 
 use RuntimeException;
 

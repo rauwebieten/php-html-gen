@@ -1,6 +1,6 @@
 <?php
 
-use RauweBieten\PhpHtmlHelper\HTML as h;
+use RauweBieten\PhpHtmlGen\HTML as h;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

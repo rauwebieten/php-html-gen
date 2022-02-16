@@ -1,6 +1,6 @@
 {
-    "name": "rauwebieten/php-html-helper",
-    "description": "A simple PHP for generating HTML",
+    "name": "rauwebieten/php-html-gen",
+    "description": "A simple HTML generation library",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "RauweBieten\\PhpHtmlHelper\\": "src/"
+            "RauweBieten\\PhpHtmlGen\\": "src/"
         }
     }
 }
